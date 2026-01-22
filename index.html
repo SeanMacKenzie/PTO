@@ -53,7 +53,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
@@ -80,12 +80,11 @@
     <script>
         const button = document.getElementById('ptoButton');
         const buttonArea = document.querySelector('.button-area');
-        
-        let buttonRect = button.getBoundingClientRect();
-        let areaRect = buttonArea.getBoundingClientRect();
+        let hasMoved = false;
         
         buttonArea.addEventListener('mousemove', (e) => {
-            buttonRect = button.getBoundingClientRect();
+            const buttonRect = button.getBoundingClientRect();
+            const areaRect = buttonArea.getBoundingClientRect();
             
             const mouseX = e.clientX;
             const mouseY = e.clientY;
@@ -99,7 +98,7 @@
             
             // If cursor is within 100px of button, move it away
             if (distance < 100) {
-                areaRect = buttonArea.getBoundingClientRect();
+                hasMoved = true;
                 
                 // Calculate new position away from cursor
                 const angle = Math.atan2(distanceY, distanceX);
@@ -118,6 +117,16 @@
                 button.style.left = newX + 'px';
                 button.style.top = newY + 'px';
                 button.style.transform = 'none';
+            }
+        });
+        
+        // Reset button position when mouse leaves the area
+        buttonArea.addEventListener('mouseleave', () => {
+            if (hasMoved) {
+                button.style.left = '50%';
+                button.style.top = '50%';
+                button.style.transform = 'translate(-50%, -50%)';
+                hasMoved = false;
             }
         });
         
